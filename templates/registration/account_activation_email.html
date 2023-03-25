@@ -1,0 +1,9 @@
+{% autoescape off %}
+
+  Hi, {{ user.username }}
+  
+  Your account was successfully created. You now have 7 days to follow the link below to activate your account.
+
+  http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+
+{% endautoescape %}

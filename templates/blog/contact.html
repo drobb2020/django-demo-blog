@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-3">Contact Excession Development</h1>
+  <p class="lead mb-3">
+    Have a question about the content of the blog. Interested in contributing? Just want to say Hi!<br /> Use the contact form below to reach out to me. I will respond to you as soon as possible.
+  </p>
+  <form target="_blank" action="https://formspree.io/f/xgedbgrd" method="POST">
+    <div class="form-group">
+      <div class="row g-3 align-items-center mb-2">
+        <div class="col">
+          <input type="text" name="name" class="form-control border border-3 border-secondary" placeholder="Full Name" required>
+        </div>
+        <div class="col">
+          <input type="email" name="email" class="form-control border border-3 border-secondary" placeholder="Email Address" required>
+        </div>
+      </div>
+    </div>
+    <input
+        name="subject"
+        type="hidden"
+        value="New submission from Excession Blog!"
+    />
+    <div class="form-group">
+      <textarea placeholder="Your Message" class="form-control border border-3 border-secondary" name="message" rows="10" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary w-100 mt-2">Send</button>
+  </form>
+</div>
+
+<script>
+    window.onbeforeunload = () => { for(const form of
+    document.getElementsByTagName('form')) { form.reset(); } }
+</script>
+{% endblock content %}

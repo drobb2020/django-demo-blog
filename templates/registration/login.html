@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+<script>
+    window.location.href = '{% url "accounts:profile" %}';
+</script>
+{% endif %}
+
+<style>
+  .login,
+  .image {
+    min-height: 100vh;
+  }
+
+  .bg-image {
+    background-image: url("{% static 'images/login.jpg' %}");
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .container-fluid {
+    max-width: 100%;
+  }
+
+  .account-form input {
+    border: 2px solid #ccc;
+    height: calc(2em + 0.75rem + 2px);
+  }
+
+  .account-form input:focus {
+    border-color: #1497ff;
+    box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.075),
+      0 0 0px rgba(255, 0, 0, 0.6);
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row no-gutter">
+    <div class="col-md-6 bg-light">
+      <div class="login d-flex align-items-center py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-12 mx-auto">
+              <form
+                class="account-form p-4 rounded"
+                action="{% url 'login' %}"
+                method="post"
+              >
+                {% csrf_token %}
+                <p class="fs-4 mb-4 fw-bold">Sign In</p>
+
+                {% if form.errors %}
+                <div class="alert alert-primary" role="alert">
+                  Error: Username or Password not correct!
+                </div>
+                {% endif %}
+
+                <label class="fw-bold"
+                  >{{ form.username.label }}</label
+                >
+                {{ form.username }}
+
+                <label class="fw-bold"
+                  >{{ form.password.label }}</label
+                >
+                {{ form.password }}
+
+                <button
+                  class="btn btn-dark w-100 py-2 mb-4 mt-5 fw-bold"
+                  type="submit"
+                  value="Log-in"
+                >
+                  Sign in
+                </button>
+
+                <p class="small fw-bold text-center pb-3">
+                  <a href="#">New to the Blog? Create an account</a>
+                </p>
+
+                <hr class="mb-3" />
+                <p class="text-muted text-center">
+                  By signing in to your account, you agree to the Blogs
+                  <a href="">Terms of Service</a> and consent to our
+                  <a href="">Cookie Policy</a> and
+                  <a href="">Privacy Policy</a>. This site is not protected by
+                  reCAPTCHA and is a demonstration website for learning purposes
+                  only.
+                </p>
+              </form>
+              <p class="small text-center pt-4">
+                <a href="{% url 'accounts:pwdreset' %}">Forgotten Password?</a>
+              </p>
+              <p class="small text-center">
+                <a href="#">Help Center?</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 d-none d-md-flex bg-image"></div>
+  </div>
+</div>
+
+{% endblock content %}

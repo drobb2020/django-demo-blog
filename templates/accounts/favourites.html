@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Your Favourites{% endblock title %}
+
+{% block content %}
+
+<div class="container my-5">
+  <section class="text-center bg-white">
+    <div class="container">
+      <h1>{{ user.username|title }}'s Favourite Posts</h1>
+      <p class="lead text-muted">Here you can review or remove the favourites posts you have added</p>
+      <div class="row">
+        {% for post in new %}
+        <div class="col-md-4">
+          <a class="text-dark" href="{{ post.get_absolute_url }}">
+            <div class="card mb-4 shadow">
+              <img
+                class="card-img-top"
+                src="{{ post.image.url }}"
+                alt="{{ post.title }}"
+              />
+              <div class="card-body">
+                <h4 class="fw-bold">
+                  {{ post.title|truncatechars:50 }}
+                </h4>
+                <p class="card-text">{{ post.excerpt|safe|truncatechars:50 }}</p>
+                <div class="d-flex justify-content-between">
+                  <p class="card-text">
+                    <small class="text-muted">First published on {{ post.published_date }}</small>
+                    <div class="favourites-section">
+                      <a href="{% url 'accounts:add-favourite' post.id %}">
+                        <i class="fa-regular fa-bookmark-slash fa-xl"></i>
+                      </a>
+                    </div>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% empty %}
+        <p class="fs-3">You have not marked any posts as your favourites yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock content %}

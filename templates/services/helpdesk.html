@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Helpdesk{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-md-center py-3">
+        <div class="col-md-8 py-3 mb-3 shadow">
+            <h1>Help Desk</h1>
+            <p class="lead">If you are having issue with the website, please create a ticket and we promise to resolve your problem as soon as possible.</p>
+            <button class="btn btn-outline-primary w-100"><a href="{% url 'services:create-ticket' %}"><i class="fa-regular fa-plus-large"></i> Open a new ticket</a></button>
+            {% if tickets %}
+              <div class="list-group">
+                {% for ticket in tickets %}
+                  {% if ticket.status == 'Open' %}
+                    <li class="list-group-item">
+                        <a href="{% url 'services.detail' ticket.id %}" class="list-group-item">{{ ticket.title }}</a>
+                    </li>
+                    <!-- delete ticket -->
+                    <form action="{% url 'services:delete-ticket' %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span><i class="fa-regular fa-trash-can-xmark"></i></span>
+                        </button>
+                    </form>
+                    <!-- edit ticket -->
+                    <form action="{% url 'services:edit-ticket' ticket.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span><i class="fa-regular fa-pen-to-square"></i></span>
+                        </button>
+                    </form>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% else %}
+              <h3 class="mt-3">There are currently no open tickets to display.</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,454 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "title": "Test after Deployment to Ubuntu 20.04/Apache2",
+      "slug": "test-after-deployment-to-ubuntu-20.04-apache2",
+      "author": "admin",
+      "content": "This is the first post on the deployed system.
+
+      Yahoo!!!
+
+      After fixing an error in /etc/apache2/sites-available/excession_config.conf and one in /etc/excession_config.json I overcame (first) apache2 not starting up, and (second) a error 500 on the website itself.
+
+      Everything is good now and ready for the next steps.
+
+      The contents of /etc/apache2/sites-available/excession_config.conf are:
+      <VirtualHost *:80>
+      # The ServerName directive sets the request scheme, hostname and port that
+      # the server uses to identify itself. This is used when creating
+      # redirection URLs. In the context of virtual hosts, the ServerName
+      # specifies what hostname must appear in the request's Host: header to
+      # match this virtual host. For the default virtual host (this file) this
+      # value is not decisive as it is used as a last resort host regardless.
+      # However, you must set it for any further virtual host explicitly.
+
+      ServerName excs-s5201.excession.org
+      ServerAdmin webmaster@excs-s5201.excession.org
+      DocumentRoot /var/www/html
+
+      # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+      # error, crit, alert, emerg.
+      # It is also possible to configure the loglevel for particular
+      # modules, e.g.
+      #LogLevel info ssl:warn
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+      # For most configuration files from conf-available/, which are
+      # enabled or disabled at a global level, it is possible to
+      # include a line for only one particular virtual host. For example the
+      # following line enables the CGI configuration for this host only
+      # after it has been globally disabled with "a2disconf".
+      #Include conf-available/serve-cgi-bin.conf
+
+      Alias /static /home/excsadmin/excession_project/static
+      <Directory /home/excsadmin/excession_project/static>
+      Require all granted
+      </Directory>
+
+      Alias /media /home/excsadmin/excession_project/media
+      <Directory /home/excsadmin/excession_project/media>
+      Require all granted
+      </Directory>
+
+      <Directory /home/excsadmin/excession_project/excession_project>
+        <Files wsgi.py>
+        Require all granted
+        </Files>
+      </Directory>
+
+      # WSGIScriptAlias / /home/excsadmin/excession_project/excession_project/wsgi.py
+      # WSGIDaemonProcess excession_app python-path=/home/excsadmin/excession_project python-home=/home/excsadmin/excession_project/venv
+      # WSGIProcessGroup excession_app
+      </VirtualHost>
+
+      The contents of /etc/excession_config.conf is:
+        content suppressed!
+  },
+  {
+    "model": "blog.post",
+    "pk": 2,
+    "fields": {
+      "title": "Working with the hostname rather than IP Address in Django",
+      "slug": "working-with-the-hostname-rather-than-ip-address-in-django",
+      "author": "admin",
+      "content": "Make sure you have your DNS records set for the server hosting your Django application, both forward and reverse records (A and PTR). Then modify the settings.py file and add the hostname to the ALLOWED_HOSTS line.
+      When done restart the apache2 service, and you should be good to go.
+      You could also create an alias (CNAME) record for the server so users could enter something like blog.excession.org.
+
+      ALLOWED_HOSTS = ['excs-s5201.excession.org', '192.168.2.201']"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 3,
+    "fields": {
+      "title": "Configuring a RedHat Server to only patch to a certain release",
+      "slug": "configuring-a-redHat-server-to-only-patch-to-a-certain-release",
+      "author": "admin",
+      "content": "When you install and register a new RHEL server against RedHat or a SUSE SMT server and your run yum update it will apply all patches from the release channel to the latest version. For RHEL 6.x this is 6.10, for RHEL 7.x this is 7.8, and for RHEL 8.x this is 8.2.
+      If you install RHEL 6.6 and want to remain at that release version you can tell yum not patch beyond that version. To do so use the following commands:
+
+      If Registered against SMT:
+      as root:
+      yum --releasever=6.6 update
+
+      If Registered against RH:
+      as root:
+      subscription-manager release --list
+      - This will list all the release versions available from the channel.
+      subscription-manager release --set=6.6
+      - This will set a cap on the channel to not patch beyond this point.
+      subscription-manager --show
+      - This will show the currnet release version that subscription-manager is set to.
+      You can then use the command: yum --releasever=6.6 update
+
+      To get newer security patches for the chosen release version (unless you are on the latest and current version) you will need to subscribe to RedHat EUS support."
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 4,
+    "fields": {
+      "title": "Configuring a RedHat 6.6 Server to Install NetIQ Access Manager 4.4.0",
+      "slug": "Configuring a RedHat 6.6 Server to Install NetIQ Access Manager 4.4.0",
+      "author": "admin",
+      "content": "1. Edit /etc/hosts and comment out the default entries
+      # 127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+      # ::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+      2. Add the following two lines into the file:
+      127.0.0.1 localhost
+      <IP_Address> hostname.domain_name hostname
+      3. Ensure ntp is configured and running. All servers need to be in timesync with each other.
+      4. Verify that /etc/resolve.conf points to a valid DNS server.
+      5. Edit /etc/yum.conf and change the following line:
+      exactarch=1 to exactarch=0
+      6. Patch the server to the desired release version (in this case 6.6)
+      7. Copy to the server the bash script named install_additional.sh and run it according to the version of   AM service:
+      -------------------------------------------------------------------
+      Red Hat Dependency Libraries Install for NetIQ Software
+      -------------------------------------------------------------------
+      1 Additional packages for iManager
+      2 Additional packages for IDM
+      3 Additional packages for Access Manager Administration Console
+      4 Additional packages for Access Manager Identity Server
+      5 Additional packages for Access Manager Access Gateway
+      0 Exit
+      ?:
+      8. install these two additional packages manually using the command:
+        yum -y install libunwind-1.1-3.el6.x86_64.rpm
+        yum -y install gperftools-libs-2.0-11.el6.3.x86_64.rpm
+      9. If this is a virtual server make sure VMware Tools are installed.
+      10. Copy the AM software to the server (usually /tmp)
+      11. Run ssh-keygen -t rsa to generate ssh keys, and then use ssh-copy-id -i id_rsa.pub to the other servers involved in Access Manager.
+      12. Configure the local firewall, or any firewall between the servers. Open the following ports:
+      Administration Console
+      1289
+      1290
+      1443
+      3080
+      3443
+      524
+      636
+      8080
+      8443
+      8444
+
+      Identity Server
+      1289
+      1290
+      1443
+      2080
+      2443
+      3080
+      3443
+      524
+      636
+      8080
+      8443
+      8444
+
+      Access Gateway
+      1290
+      1443
+      2443
+      524
+      636
+      8080
+      8443
+      8444
+      13. If this is a virtual machine take a snapshot of the machine.
+
+      The Access Manager products should now be ready to install successfully."
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 5,
+    "fields": {
+      "title": "IDM 4.8.2 Installation Notes",
+      "slug": "idm-4.8.2-installation-notes",
+      "author": "admin",
+      "content": "NOTE: You must install from the IDM 4.8 ISO first, and then patch to 4.8.2. The 4.8.2 ISO image is not a full install product!
+
+      1. Install, configure, and deploy the User Application driver from Designer first. The driver must be deployed to the driverset in the tree where you are deploying the User Application.
+      2. Install, configure, and deploy the Roles and Resource Services Driver from Designer to the same driverset as above. The user app driver must be in the tree to successfully configure the RRSD driver.
+      If you are using Microsoft SQL Server 2017 download and install on the server the sqljdbc.jar file (version X.XX.X) to a shared location (say /opt/netiq/sql-jar/). This will be needed during the configuration operation.
+
+      Still looking for the installation details for the User Application"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 6,
+    "fields": {
+      "title": "Creating a Python Virtual Environment (venv) on Windows",
+      "slug": "creating-a-python-virtual-environment-venv-on-windows",
+      "author": "admin",
+      "content": "It is best practice to write your python projects in a virtual environment to isolate your projects that may require specific package versions to function.
+      The basic setup is (Using the Windows Command Prompt and not PowerShell):
+      1. python -m venv project_env
+      This will create a virtutal environment directory named project_env, and under this folder you will find a subfolder named Scripts. To start the virtual environment:
+      .\project_env\Scripts\activate.bat
+      If the command was successful you will see at the beginning of the command prompt (project_env).
+      You can confirm that this is a new instance of python by typing where python.
+      You can now use pip list to view the installed python modules. There are only two by default. You can also you pip to install any module that you require in the project (ie. pip install request).
+      Once you have all the required modules installed for your project you can then use pip freeze to print out a list of all the modules, you can pipe this to a requirements.txt file for later use.
+      To shutdown the virtual environment use the command deactivate.
+      Best Practices
+      1. place the virtual environment folder under your base project folder, for example: python -m venv venv my_project\venv, you can activate it using the command my_project\venv\Scripts\activate.bat
+      2. It is best if you use version control (such as git) to exclude the venv folder from version control. If you need to restore the project at a later date you can use the command pip install -r requirement.txt to get back all the specific modules the project requires.
+      3. If you want to link all the current system modules into your project you can use the command python -m venv venv --system-site-packages.
+
+      Happy coding!"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 7,
+    "fields": {
+      "title": "Setting SSL Certificates on the Django Blog Application",
+      "slug": "setting-ssl-certificates-on-the-django=blog-application",
+      "author": "admin",
+      "content": "The best thing to do is use the Let's Encrypt free SSL certificate. You can find information about Let's Encrypt and Certbot here (https://letsencrypt.org/getting-started/).
+      Using Let's Encrypt requires twodistinct things:
+      1. A registered domain name to your email address.
+      2. A public IP Address
+
+      I use a domain name (excession.org) but I don't own it, and I run my server on a non-routable private IP Address. What I do have instead is a private root CA running on my OES2018 SP1 server. This allows me to issue a certificate to any server I wish. The steps required are:
+      1. Generate a CSR on the server hosting your Django Blog, the command is:
+      openssl req -new -newkey rsa:2048 -nodes -keyout excs-s5201.excession.org.key -out excs-s5201.excession.org.csr. This will generate both a csr and a key. Keep the .key file safe for later use.
+      2. Copy the CSR from the server to your local workstation.
+      3. Launch a browser and login to iManager for your eDirectory tree. Under Roles and Tasks go to NetIQ Certificate Server and select the task Create Server Certificate.
+      4. Upload the csr when requested.
+      5. Answer the usage questions.
+      6. Download the resulting generated der to your workstation and upload it to the Django server you are working on.
+      7. Use the following openssl command to convert the certificate from a DER to a PEM:
+      openssl x509 -inform der -in excs-s5201.excession.org.der -out excs-s5201.excession.org.pem
+      8. Back in iManager export a copy of the root CA certificate.
+      9. Copy the root CA certificate to the Django server.
+
+      On the server do the following SSL configurations:
+      1. Convert the root CA der file to a pem using the following command:
+      openssl x509 -inform der -in excs-tree-ca.der -out excs-tree-ca.pem
+      2. Copy the server pem file and the root CA pem file to /etc/ssl/certs/
+      3. Copy the server key file to /etc/ssl/private/
+      4. Once all the copies are done, as root, issue the c_rehash command to generate hash files for the new certificates.
+      On the server make the following modifications to apache2 configuration:
+      1. Under /etc/apache2/ create a new directory named ssl/
+      2. Under /etc/apache2/sites-available/ make a copy of your Django project conf file, name it django_project-ssl.conf
+      3. In the original conf file make the following changes:
+
+      # Add your server name
+      ServerName excs-s5201.excession.org
+
+      # Remark out the WSGI directives
+      # WSGIScriptAlias / /home/excsadmin/excession_project/excession_project/wsgi.py
+      # WSGIDaemonProcess excession_app python-path=/home/excsadmin/excession_project python-home=/home/excsadmin/excession_project/venv
+      # WSGIProcessGroup excession_app
+
+      # Add the rewrite commands
+      RewriteEngine on
+      RewriteCond %{SERVER_NAME} =excs-s5201.excession.org
+      RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+      Save the file.
+      4. In the ssl conf file make the followng changes:
+      # Add IfModule at top, and closing tag at bottom of file
+      <IfModule mod_ssl.c>
+      and
+      </IfModule>"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 8,
+    "fields": {
+      "title": "Adding a favicon to a Django Project",
+      "slug": "adding-a-favicon-to-a-django-project",
+      "author": "admin",
+      "content": "A favicon (a.k.a a “favorite icon” or a “shortcut icon”) is a small image that appears with the title of a web page in a browser. Typically, it’s a logo. Favicons were first introduced by Internet Explorer 5 in 1999, and they have since been standardized by W3C. Traditionally, a site’s favicon is saved as 16×16 pixel “favicon.ico” file in the site’s root directory, but many contemporary browsers support other sizes, formats, and locations. There are a plethora of free favicon generators available online. Every serious website should have a favicon.
+
+      The default icon for web pages that don't have a favicon value set is boring. Go to iconarchive.com and find an icon that fits your project (I chose a Star Wars Stormtropper). Copy the file to your host server and place it under the static/images folder (you may have to create that folder), and change the name of the file to favicon.ico.
+      Then in your base.html file, or the file where you are calling {% load static %} add the following line after the page title:
+      <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+
+      Thats it, thats all. Restart your web-server to have the change take effect."
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 9,
+    "fields": {
+      "title": "virtualenv VS venv VS pipenv",
+      "slug": "virtualenv-vs-venv-vs-pipenv",
+      "author": "admin",
+      "content": "Python applications will often use packages and modules that don’t come as part of the standard library. Applications will sometimes need a specific version of a library, because the application may require that a particular bug has been fixed or the application may be written using an obsolete version of the library’s interface.
+
+      This means it may not be possible for one Python installation to meet the requirements of every application. If application A needs version 1.0 of a particular module but application B needs version 2.0, then the requirements are in conflict and installing either version 1.0 or 2.0 will leave one application unable to run.
+
+      The solution for this problem is to create a virtual environment, a self-contained directory tree that contains a Python installation for a particular version of Python, plus a number of additional packages.
+
+      Different applications can then use different virtual environments. To resolve the earlier example of conflicting requirements, application A can have its own virtual environment with version 1.0 installed while application B has another virtual environment with version 2.0. If application B requires a library be upgraded to version 3.0, this will not affect application A’s environment.
+
+      VIRTUALENV
+      Virtualenv is one of the oldest methods for creating a virtual environment and is still maintained today.
+
+      Virtualenv has only one basic command:
+      virtualenv <environment name>, for example virtualenv venv
+      The tool works in two phases:
+
+      Phase 1 discovers a python interpreter to create a virtual environment from (by default this is the same python as the one virtualenv is running from, however we can change this via the p option).
+
+      Phase 2 creates a virtual environment at the specified destination (dest), this can be broken down into four further sub-steps:
+
+        a. create a python that matches the target python interpreter from phase 1,
+
+        b. install (bootstrap) seed packages (one or more of pip, setuptools, wheel) in the created virtual environment,
+
+        c. install activation scripts into the binary directory of the virtual environment (these will allow end users to activate the virtual environment from various shells).
+
+        d. create files that mark the virtual environment as to be ignored by version control systems (currently we support Git only, as Mercurial, Bazaar or SVN do not support ignore files in subdirectories). This step can be skipped with the no-vcs-ignore option.
+
+      The python in your new virtualenv is effectively isolated from the python that was used to create it.
+      To activate the virtual environment use the command on MacOS or Linux:
+      source venv/bin/activate
+      on Windows:
+      venv\bin\activate.bat
+      Use the command deactivate to stop the virtual environment.
+
+      VENV
+      Venv is a subset of virtualenv and has been integrated into the standard library under the venv module. The venv module does not offer all features of virtualenv library, to name just a few more prominent:
+
+      a.is slower (by not having the app-data seed method),
+      b. is not as extendable,
+      c. cannot create virtual environments for arbitrarily installed python versions (and automatically discover these),
+      d. is not upgrade-able via pip,
+      e. does not have as rich programmatic API (describe virtual environments without creating them).
+      Venv is activated and deactivated in the exact same way.
+
+      PIPENV
+      Pipenv is a tool that aims to bring the best of all packaging worlds (bundler, composer, npm, cargo, yarn, etc.) to the Python world. Windows is a first-class citizen, in our world.
+
+      It automatically creates and manages a virtualenv for your projects, as well as adds/removes packages from your Pipfile as you install/uninstall packages. It also generates the ever-important Pipfile.lock, which is used to produce deterministic builds.
+
+      Pipenv is primarily meant to provide users and developers of applications with an easy method to setup a working environment.
+      The problems that Pipenv seeks to solve are multi-faceted:
+
+        a.You no longer need to use pip and virtualenv separately. They work together.
+        b. Managing a requirements.txt file can be problematic, so Pipenv uses Pipfile and Pipfile.lock to separate abstract dependency declarations from the last tested combination.
+        c. Hashes are used everywhere, always. Security. Automatically expose security vulnerabilities.
+        d. Strongly encourage the use of the latest versions of dependencies to minimize security risks arising from outdated components.
+        e. Give you insight into your dependency graph (e.g. $ pipenv graph).
+        f. Streamline development workflow by loading .env files.
+
+      Pipenv is an external library and as such needs to be installed globally on your machine with the command:
+      pip install --user pipenv
+
+      Pipenv Features
+      a. Enables truly deterministic builds, while easily specifying only what you want.
+      b. Generates and checks file hashes for locked dependencies.
+      c. Automatically install required Pythons, if pyenv is available.
+      d. Automatically finds your project home, recursively, by looking for a Pipfile.
+      e. Automatically generates a Pipfile, if one doesn’t exist.
+      f. Automatically creates a virtualenv in a standard location.
+      g. Automatically adds/removes packages to a Pipfile when they are installed or uninstalled.
+      h. Automatically loads .env files, if they exist.
+      The main commands are install, uninstall, and lock, which generates a Pipfile.lock. These are intended to replace $ pip install usage, as well as manual virtualenv management (to activate a virtualenv, run $ pipenv shell).
+
+      Basic Concepts
+      a. A virtualenv will automatically be created, when one doesn’t exist.
+      b. When no parameters are passed to install, all packages [packages] specified will be installed.
+      c. To initialize a Python 3 virtual environment, run $ pipenv --three.
+      d. To initialize a Python 2 virtual environment, run $ pipenv --two.
+      e. Otherwise, whatever virtualenv defaults to will be the default.
+
+      Other Commands
+      a. graph will show you a dependency graph of your installed dependencies.
+      b. shell will spawn a shell with the virtualenv activated. This shell can be deactivated by using exit.
+      c. run will run a given command from the virtualenv, with any arguments forwarded (e.g. $ pipenv run python or $ pipenv run pip freeze).
+      d. check checks for security vulnerabilities and asserts that PEP 508 requirements are being met by the current environment."
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 10,
+    "fields": {
+      "title": "Enabling Secure LDAP communications in Microsoft AD",
+      "slug": "enabling-secure-ldap-communications-in-microsoft-ad",
+      "author": "admin",
+      "content": "LDAP channel binding and LDAP signing provide ways to increase the security for communications between LDAP clients and Active Directory domain controllers. A set of unsafe default configurations for LDAP channel binding and LDAP signing exist on Active Directory domain controllers that let LDAP clients communicate with them without enforcing LDAP channel binding and LDAP signing. This can open Active Directory domain controllers to an elevation of privilege vulnerability.
+
+      This vulnerability could allow a man-in-the-middle attacker to successfully forward an authentication request to a Microsoft domain server which has not been configured to require channel binding, signing, or sealing on incoming connections.
+
+      In order to mitigate the vulnerability and possible outage caused by the update, configure LDAP signing requirements on domain controllers and Active Directory clients prior to installing the update. We recommend to perform systems configuration in this sequence:
+
+      1. Configure clients to request LDAP signing;
+      2. When all clients receive this configuration, configure domain controllers to require signing;
+      3. Configure clients to require signing.
+      This sequence ensures that no client will stop working during transition.
+
+      CONFIGURE CLIENTS TO REQUEST SIGNING
+      Use steps below to configure clients to request LDAP signing:
+
+      1. On domain member with GPMC (Group Policy Management Console) installed, open GPMC console (gpmc.msc);
+      2. Expand Forest\Domains\Current Domain\Group Policy Objects;
+      3. Create new GPO item and provide GPO name (say, Client LDAP Signing);
+      4. Edit created GPO;
+      5. Expand Computer Configuration\Policies\Windows Settings\Security Settings\Local Policies\Security Options;
+      6. Open Network security: LDAP client signing requirements item and select Negotiate Signing option;
+      7. Link GPO to domain level.
+      8. Repeat steps 1-7 for every domain in the forest.
+      Wait until all clients receive and apply new GPO.
+
+      CONFIGURE DOMAIN CONTROLLERS TO REQUIRE SIGNING
+      When new GPO is applied, create new GPO to configure domain controllers:
+
+      1. On domain member with GPMC (Group Policy Management Console) installed,
+      open GPMC console (gpmc.msc);
+      2. Expand Forest\Domains\Current Domain\Group Policy Objects;
+      3. Create new GPO item and provide GPO name (say, Server LDAP Signing);
+      4. Edit created GPO;
+      5. Expand Computer Configuration\Policies\Windows Settings\Security
+      Settings\Local Policies\Security Options;
+      6. Open Domain controller: LDAP server signing requirements item and
+      select Require Signing option;
+      7. Link GPO to “Domain Controllers” container.
+      8. Repeat steps 1-7 for every domain in the forest.
+      Wait until all domain controllers receive and apply new GPO. Test if all systems are able to communicate with domain controllers. In the event of failure, revert signing requirements to “None” and consult with vendor support to identify and resolve the problem.
+
+      CONFIGURE CLIENTS TO REQUIRE SIGNING
+      Use steps below to configure clients to require LDAP signing:
+
+      1. On domain member with GPMC (Group Policy Management Console) installed, open GPMC console (gpmc.msc);
+      2. Expand Forest\Domains\Current Domain\Group Policy Objects;
+      3. Edit previously created GPO (Client LDAP Signing);
+      4. Expand Computer Configuration\Policies\Windows Settings\Security Settings\Local Policies\Security Options;
+      5. Open Network security: LDAP client signing requirements item and select Require Signing option;
+      6. Repeat steps 1-5 for every domain in the forest.
+      Wait until all clients receive and apply new GPO. Then all domain members are ready to install new update referenced in security advisory."
+    }
+  }
+]

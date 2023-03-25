@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Welcome to Blog{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-3">Excession Development Blog</h1>
+    <p class="lead">
+      This is a dummy development company designed to showcase and highlight new
+      web <strong>technologies</strong> and <strong>features</strong> I am are
+      learning. As such, while these blog articles may be interesting to read,
+      they do not necessarily contain factual or useful information in all
+      cases. This is first and foremost a development site where I can learn the
+      good, bad and the ugly of web development.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="album py-5 bg-light">
+    <div class="container my-4">
+      <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4">
+          <a class="text-dark" href="{{post.get_absolute_url}}">
+            <div class="card mb-4 shadow">
+              <img
+                class="card-img-top"
+                src="{{post.image.url}}"
+                alt="{{ post.title }}"
+              />
+              <div class="card-body">
+                <h2 style="font-size: 18px; font-weight: bold">
+                  {{post.title|truncatechars:50}}
+                </h2>
+                <p class="card-text">{{post.excerpt|safe|truncatechars:50}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text">
+                    <small class="text-muted"
+                      >First published on {{ post.published_date }}</small
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% empty %}
+        <p class="m-0">There are currently no blog posts</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
