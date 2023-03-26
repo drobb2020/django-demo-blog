@@ -147,7 +147,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-# STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 CKEDITOR_UPLOAD_PATH='uploads'
 MEDIA_URL = 'media/'
@@ -174,13 +174,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Demo Blog Admin",
+    "site_title": "Excession Blog Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Django Demo Blog ",
+    "site_header": "Excession Blog ",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Django Demo Blog ",
+    "site_brand": "Excession Blog ",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "images/logo-sm.jpg",
@@ -192,7 +192,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to the Django Demo Blog ",
+    "welcome_sign": "Welcome to the Excession Blog ",
 
     # Copyright on the footer
     "copyright": "Excession Development",
