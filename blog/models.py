@@ -45,7 +45,7 @@ class Post(models.Model):
         User, related_name="favourite", default=None, blank=True
     )
     likes = models.ManyToManyField(User, related_name="like", default=None, blank=True)
-    like_count = models.BigIntegerField(default="0")
+    like_count = models.BigIntegerField(default=0)
     objects = models.Manager()
     newmanager = NewManager()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -68,7 +68,7 @@ class Comment(MPTTModel):
     )
     name = models.CharField(max_length=150)
     email = models.EmailField()
-    content = models.TextField(null=True, blank=True)
+    content = models.TextField(blank=True)
     publish = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
 
