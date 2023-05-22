@@ -151,6 +151,8 @@ You will need Python installed on your machine before you start this project. As
    python manage.py runserver
    ```
 
+10. You can see the full deployment steps to an Ubuntu server [here](deployment_notes.md)
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
