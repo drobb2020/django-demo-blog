@@ -5,6 +5,7 @@
     "autopep",
     "catlist",
     "Cheatsheet",
+    "collectstatic",
     "createsuperuser",
     "csrfmiddlewaretoken",
     "customizer",
