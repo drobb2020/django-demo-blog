@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -165,17 +164,22 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 JAZZMIN_SETTINGS = {
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    # title of the window
+    # (Will default to current_admin_site.site_title if absent or None)
     "site_title": "Excession Blog Admin",
-    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    # Title on the login screen (19 chars max)
+    # (defaults to current_admin_site.site_header if absent or None)
     "site_header": "Excession Blog ",
-    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    # Title on the brand (19 chars max)
+    # (defaults to current_admin_site.site_header if absent or None)
     "site_brand": "Excession Blog ",
-    # Logo to use for your site, must be present in static files, used for brand on top left
+    # Logo to use for your site, must be present in static files,
+    # used for brand on top left
     "site_logo": "images/logo-sm.jpg",
     # CSS classes that are applied to the logo above
     "site_logo_classes": "img-circle",
-    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    # Relative path to a favicon for your site, will default to site_logo
+    # if absent (ideally 32x32 px)
     "site_icon": None,
     # Welcome text on the login screen
     "welcome_sign": "Welcome to the Excession Blog ",
@@ -183,7 +187,8 @@ JAZZMIN_SETTINGS = {
     "copyright": "Excession Development",
     # The model admin to search from the search bar, search bar omitted if excluded
     "search_model": "auth.User",
-    # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
+    # Field name on user model that contains avatar ImageField/URLField/Charfield
+    # or a callable that receives the user
     "user_avatar": None,
     ############
     # Top Menu #
@@ -200,13 +205,15 @@ JAZZMIN_SETTINGS = {
         },
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},
-        # App with dropdown menu to all its models pages (Permissions checked against models)
+        # App with dropdown menu to all its models pages (Permissions checked
+        # against models)
         {"app": "blog"},
     ],
     #############
     # User Menu #
     #############
-    # Additional links to include in the user menu on the top right ("app" url type is not allowed)
+    # Additional links to include in the user menu on the top right
+    # ("app" url type is not allowed)
     "usermenu_links": [
         {
             "name": "Support",
@@ -226,8 +233,15 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     # Hide these models when generating side menu (e.g auth.user)
     "hide_models": [],
-    # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "blog", "blog.categories", "blog.posts"],
+    # List of apps (and/or models) to base side menu ordering off of
+    # (does not need to contain all apps/models)
+    "order_with_respect_to": [
+        "auth",
+        "blog",
+        "blog.categories",
+        "blog.comments",
+        "blog.posts",
+    ],
     # Custom links to append to app groups, keyed on app name
     # "custom_links": {
     #     "books": [{
