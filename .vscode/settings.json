@@ -40,6 +40,8 @@
     "newmanager",
     "newpass",
     "oldpass",
+    "pagecount",
+    "pagenumber",
     "pathspec",
     "platformdirs",
     "postid",
@@ -72,5 +74,9 @@
     "webapps",
     "WSGI",
     "xxji"
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }

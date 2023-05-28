@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>{{ post.title }}</title>
+    <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .img {
+                text-align: center;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            #footer_content {
+                text-align: center;
+                height: 40px;
+                bottom: 0;
+            }
+    </style>
+</head>
+
+<body>
+
+<div class='wrapper'>
+  <div class='header'>
+    <p class='title'>Excession Development Blog</p>
+  </div>
+    <div class='details'>
+      <img src="{{ post.image.path }}" alt="{{ post.title }}" class="img">
+      <h2>{{ post.title }}</h2>
+      <small>Category: {{ post.category }}</small>
+      <p>{{ post.excerpt|safe }}</p>
+      <hr class='hrItem' />
+      <div>
+        <p>Published: {{ post.published_date }}</p>
+        <p>{{ post.author|title }}</p>
+      </div>
+      <hr class="hrItem">
+      <p>{{ post.content|safe }}</p>
+      <hr class="hrItem">
+      <p>Last updated {{ post.updated_at|timesince}} ago</p>
+    </div>
+    <div id="footer_content">
+        <img src="static/logo-sm.jpg" alt="Excession Development">
+        <p class="text-center">&copy; 2023 | Excession Development. All rights reserved.</p>
+    </div>
+</div>
+
+</body>
+</html>

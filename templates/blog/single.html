@@ -138,6 +138,10 @@
         </div>
       </div>
     </div>
+    <!-- Generate PDF button -->
+    <div class="col-md-8">
+      <a href="{% url 'blog:generate-pdf' post.pk %}" class="btn btn-outline-secondary w-100">Generate PDF</a>
+    </div>
     <div class="col-md-8">
       <!-- Comment Count -->
       {% with allcomments.count as total_comments %}

@@ -1,7 +1,7 @@
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 
-from .models import Category, Comment, Post
+from .models import Category, Comment
 
 
 class NewCommentForm(forms.ModelForm):

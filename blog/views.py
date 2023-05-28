@@ -1,9 +1,11 @@
 from django.core import serializers
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
+from django.template.loader import get_template
 from django.views.generic import ListView
+from xhtml2pdf import pisa
 
 from .forms import NewCommentForm, PostSearchForm
 from .models import Category, Post
@@ -110,6 +112,26 @@ def post_search(request):
 
     context = {"form": form, "q": q, "c": c, "results": results}
     return render(request, "blog/search.html", context)
+
+
+def post_render_pdf_view(request, *args, **kwargs):
+    pk = kwargs.get('pk')
+    post = get_object_or_404(Post, pk=pk)
+    template_path = "blog/pdf_template.html"
+    context = {"post": post}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="excession-post.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse("We had some errors <pre>" + html + "</pre>")
+    return response
 
 
 def contact(request):
